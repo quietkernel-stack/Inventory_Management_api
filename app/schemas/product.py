@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, StringConstraints, field_validator
-from typing import Optional, Annotated
+from typing import Optional, Annotated, List
 from decimal import Decimal
 from datetime import datetime
 
@@ -34,3 +34,14 @@ class ResponseModelCreateProduct(BaseModel):
     quantity: int
     created_at: datetime
     message: str = "Product added successfully"
+
+class ResponseModelGetIdProductDetails(BaseModel):
+    id: int
+    name: NonEmptyStr
+    description: DescriptionConstraint
+    price: Decimal
+    quantity: int
+    created_at: datetime
+
+class ResponseModelGetProducts(BaseModel):
+    Inventory: List[ResponseModelGetIdProductDetails]
