@@ -1,6 +1,8 @@
 from app.database import pool
 import app.services
+import pytest
 
+## The tests below, are for creating/adding products to the database
 subject = {
     "name": "Wireless Mouse",
     "price": 12500,
@@ -76,3 +78,25 @@ def test_transaction_rolls_back(client, monkeypatch):
             "SELECT * FROM stock_movements;"
         ).fetchone()
         assert row2 is None
+
+## The tests below, are for retrieving product details from the database
+
+@pytest.fixture
+def create_product(client):
+    response = client.post("/products", json=subject)
+    assert response.status_code == 201
+    idclient = response.json()["id"]
+    return idclient
+
+def test_retrieve_product_by_id(client, create_product):
+    idclient = [create_product, 1002]
+    response = client.get(f"/products/{idclient[0]}")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["id"] == idclient[0]
+    assert body["name"] == "Wireless Mouse"
+    assert body["price"] == "12500.00"
+    assert body["quantity"] == 20
+
+    response2 = client.get(f"/products/{idclient[1]}")
+    assert response2.status_code == 404
