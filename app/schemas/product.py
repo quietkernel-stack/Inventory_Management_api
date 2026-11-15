@@ -58,3 +58,12 @@ class RequestModelUpdateProduct(BaseModel):
         if not self.model_fields_set:
             raise ValueError("At least one field must be provided")
         return self
+    
+class ResponseModelUpdateProduct(BaseModel):
+    id: int
+    name: NonEmptyStr
+    description: DescriptionConstraint
+    price: Decimal
+    quantity: int
+    updated_at: datetime
+    message: str = "Product updated successfully"

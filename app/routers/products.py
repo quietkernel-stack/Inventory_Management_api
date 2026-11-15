@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.database import get_connection
 from app.repositories.product_repo import retreive_product_details_by_id, get_products_collectively
-from app.services import new_product
-from app.schemas.product import RequestModelCreateProduct, ResponseModelCreateProduct, ResponseModelGetIdProductDetails, ResponseModelGetProducts
+from app.services import new_product, update_product
+from app.schemas.product import RequestModelCreateProduct, ResponseModelCreateProduct, ResponseModelGetIdProductDetails, ResponseModelGetProducts, RequestModelUpdateProduct, ResponseModelUpdateProduct
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -23,3 +23,10 @@ def get_products_endpoint(connection=Depends(get_connection)):
     if not products:
         return {"Inventory": []} 
     return {"Inventory": products}
+
+@router.patch("/{id}", status_code=200, response_model=ResponseModelUpdateProduct)
+def update_product_endpoint(id: int, product: RequestModelUpdateProduct, connection=Depends(get_connection)):
+    result = update_product(connection, id, product.model_dump(exclude_unset=True))
+    if result is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return result
