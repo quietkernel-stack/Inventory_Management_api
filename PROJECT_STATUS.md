@@ -58,3 +58,11 @@ The tests use a real PostgreSQL test database and truncate both application tabl
 5. Design stock-movement operations and history before adding routes; define allowed movement types and quantity-invariant rules.
 6. Implement and test product updates, including how updates create adjustment movements and maintain `updated_at`.
 7. Design and implement soft deletion, including inventory rules and movement-history effects.
+
+### Product schema test follow-ups
+
+- [ ] Fix the expected Pydantic error type for prices exceeding
+      the Numeric(10,2) precision limit.
+- [ ] Re-enable and verify the excessive-price test.
+- [ ] Reassess whether response schemas should enforce database
+      decimal precision independently of database constraints.

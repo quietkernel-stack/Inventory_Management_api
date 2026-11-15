@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, StringConstraints, field_validator
+from pydantic import BaseModel, Field, StringConstraints, field_validator, model_validator, ConfigDict
 from typing import Optional, Annotated, List
 from decimal import Decimal
 from datetime import datetime
@@ -45,3 +45,16 @@ class ResponseModelGetIdProductDetails(BaseModel):
 
 class ResponseModelGetProducts(BaseModel):
     Inventory: List[ResponseModelGetIdProductDetails]
+
+class RequestModelUpdateProduct(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: Optional[NonEmptyStr] = None
+    description: Optional[DescriptionConstraint] = None
+    price: Optional[PriceConstraint] = None
+
+    @model_validator(mode="after")
+    def check_at_least_one_field(self):
+        if not self.model_fields_set:
+            raise ValueError("At least one field must be provided")
+        return self
