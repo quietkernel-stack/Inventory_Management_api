@@ -21,5 +21,5 @@ def get_product_details_by_id_endpoint(id: int, connection=Depends(get_connectio
 def get_products_endpoint(connection=Depends(get_connection)):
     products = get_products_collectively(connection)
     if not products:
-        raise HTTPException(status_code=404, detail="No products available")
+        return {"Inventory": []} 
     return {"Inventory": products}

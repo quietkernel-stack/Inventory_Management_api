@@ -21,6 +21,7 @@ def get_products_collectively(connection):
     with connection.cursor(row_factory=dict_row) as cur:
         row = cur.execute("""
             SELECT * FROM products
-            WHERE is_deleted = false;
+            WHERE is_deleted = false
+            ORDER BY id ASC;
 """).fetchall()
         return row
