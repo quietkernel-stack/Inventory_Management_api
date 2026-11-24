@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 BASE_DIR = Path(__file__).resolve().parent.parent
 class Settings(BaseSettings):
     DATABASE_URL: str
-    TEST_DATABASE_URL: str
+    TEST_DATABASE_URL: str | None = None
     APP_NAME: str = "Inventory Management API"
     DEBUG: bool = False
 
